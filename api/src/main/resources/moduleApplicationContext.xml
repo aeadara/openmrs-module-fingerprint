@@ -17,11 +17,18 @@
                     </property>
                     <property name="target">
                         <bean class="org.openmrs.module.muzimafingerPrint.api.impl.MuzimafingerPrintServiceImpl">
-                            <constructor-arg>
+                            <!--<constructor-arg>
                                 <bean class="org.openmrs.module.muzimafingerPrint.api.db.hibernet.impl.MuzimaFingerprintDAOImpl">
                                     <constructor-arg ref="sessionFactory"/>
                                 </bean>
-                            </constructor-arg>
+                            </constructor-arg>-->
+                            <property name="dao">
+                                <bean class="org.openmrs.module.muzimafingerPrint.api.db.hibernet.impl.MuzimaFingerprintDAOImpl">
+                                    <property name="sessionFactory">
+                                        <ref bean="sessionFactory"/>
+                                    </property>
+                                </bean>
+                            </property>
                         </bean>
                     </property>
                     <property name="preInterceptors">

@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.openmrs.module.muzimafingerPrint.MuzimaFingerprint;
 import org.openmrs.module.muzimafingerPrint.api.db.hibernet.MuzimaFingerprintDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 import java.util.List;
@@ -15,11 +16,12 @@ import java.util.List;
  */
 public class MuzimaFingerprintDAOImpl implements MuzimaFingerprintDAO {
 
-    private SessionFactory factory;
+    @Autowired
+    private SessionFactory sessionFactory;
 
-    public MuzimaFingerprintDAOImpl(SessionFactory factory) {
-        this.factory = factory;
-    }
+    /*public MuzimaFingerprintDAOImpl(SessionFactory factory) {
+        this.sessionFactory = factory;
+    }*/
 
     @Override
     public List<MuzimaFingerprint> getAll() {
@@ -45,8 +47,8 @@ public class MuzimaFingerprintDAOImpl implements MuzimaFingerprintDAO {
     }
 
     private Session session() {
-        factory.getCurrentSession().setCacheMode(CacheMode.IGNORE);
-        return factory.getCurrentSession();
+        sessionFactory.getCurrentSession().setCacheMode(CacheMode.IGNORE);
+        return sessionFactory.getCurrentSession();
     }
 
     public MuzimaFingerprint findByUuid(String uuid) {
@@ -57,6 +59,14 @@ public class MuzimaFingerprintDAOImpl implements MuzimaFingerprintDAO {
     public MuzimaFingerprint findByPatientUUID(String patientUUID) {
 
         return (MuzimaFingerprint)session().createQuery("from MuzimaFingerprint m where m.patientUUID = '" + patientUUID + "'").uniqueResult();
+    }
+
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    public SessionFactory getSessionFactory() {
+        return this.sessionFactory;
     }
 
 
