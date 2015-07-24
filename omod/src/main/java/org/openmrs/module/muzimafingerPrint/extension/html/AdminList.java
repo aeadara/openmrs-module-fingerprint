@@ -44,7 +44,8 @@ public class AdminList extends AdministrationSectionExt {
 	 */
 	public Map<String, String> getLinks() {
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		map.put("module/muzimafingerPrint/managefingerprint.form", "Manage fingerPrint");
+		//map.put("module/muzimafingerPrint/managefingerprint.form", "Manage fingerPrint");
+		map.put("module/muzimafingerPrint/findPatient1.form", "Manage fingerPrint");
 		return map;
 	}
 	

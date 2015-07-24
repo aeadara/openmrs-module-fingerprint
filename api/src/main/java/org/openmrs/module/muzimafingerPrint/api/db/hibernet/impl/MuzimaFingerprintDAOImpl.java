@@ -29,12 +29,14 @@ public class MuzimaFingerprintDAOImpl implements MuzimaFingerprintDAO {
     }
 
     @Override
-    public void saveMuzimaFingerprint(MuzimaFingerprint fingerprint) {
+    public MuzimaFingerprint saveMuzimaFingerprint(MuzimaFingerprint fingerprint) {
         try{
-        session().saveOrUpdate(fingerprint);}
-        catch (Exception e){
+            session().saveOrUpdate(fingerprint);
+            return fingerprint;
+        } catch (Exception e){
             e.printStackTrace();
         }
+        return fingerprint;
     }
 
     @Override

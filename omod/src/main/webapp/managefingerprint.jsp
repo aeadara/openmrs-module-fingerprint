@@ -18,9 +18,10 @@
         <a href="#"><i class="icon-home"></i> Muzima Fingerprint Module</a>
     </div>
 </div>
+    <openmrs:portlet id="findPatient" url="findPatient" parameters="size=full|postURL=patientDashboard.form|showIncludeVoided=false|viewType=shortEdit" moduleId="muzimafingerPrint" />
 <div id = "applet">
     <applet name="Muzima fingerprint module" id="Abis" code="org.openmrs.module.muzimafingerPrint.SimpleFingersApplication"  width="100%"  height="100">
-        <param name="jnlp_href" value="/openmrs/moduleResources/muzimafingerPrint/fingerprint.jnlp" />
+        <param name="jnlp_href" value="${pageContext.request.contextPath}/moduleResources/muzimafingerPrint/fingerprint.jnlp" />
         <param name="codebase_lookup" value="false" />
         <param name="separate_jvm" value="true" />
         <param name="server_address" value="/local" />
@@ -80,7 +81,7 @@
         </fieldset>
         <br/>
     </form>
-    <input id = "btnByIdentifier" type="button" value= "Identify patient">
+    <input id = "btnByIdentifier" type="button" value= "Search Patient">
     <input id = "btnCancel" class = "doCancel" type="button" value= "Cancel">
 </div>
 <div id = "registrationForm">
@@ -115,7 +116,7 @@
 				<input autocomplete="off" type="text" name="amrs_id">
 
 				<label for= "fingerprint">Finger Print</label>
-				<img src ="/openmrs/moduleResources/muzimafingerPrint/images/done.png"/>
+				<img src ="${pageContext.request.contextPath}/moduleResources/muzimafingerPrint/images/done.png"/>
 				<input id = "fingerprint" autocomplete="off" type="hidden" name="fingerprint">
 
 				<label for= "birth_date">Date of Birth(Format: MM/dd/yyyy)</label>

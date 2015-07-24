@@ -56,7 +56,7 @@ public class MuzimafingerPrintServiceImpl extends BaseOpenmrsService implements 
         Context.getPatientService().savePatient(patient);
         //Context.getEncounterService().saveEncounter(encounter);
         MuzimaFingerprint muzimaFingerprint = patientJsonParser.CreatePatientFingerPrint(patient, patientData);
-        muzimaFingerprintDAO.saveMuzimaFingerprint(muzimaFingerprint);
+        System.out.println("In save Patient method: " + (muzimaFingerprintDAO.saveMuzimaFingerprint(muzimaFingerprint)).toString());
 
         return new PatientFingerPrintModel(patient.getUuid(),muzimaFingerprint.getFingerprint(), patient.getId(), patient.getGivenName(), patient.getFamilyName(), patient.getGender());
     }
@@ -86,6 +86,32 @@ public class MuzimafingerPrintServiceImpl extends BaseOpenmrsService implements 
         if(patient == null)
             return null;
         return new PatientFingerPrintModel(patient.getUuid(),fingerprint, patient.getId(), patient.getGivenName(), patient.getFamilyName(), patient.getGender());
+    }
+
+    @Override
+    public List<PatientFingerPrintModel> findPatients(String searchInput) {
+        List<PatientFingerPrintModel> patients = new ArrayList<PatientFingerPrintModel>();
+        List<Patient> searchResults = Context.getPatientService().getPatients(searchInput);
+        MuzimaFingerprint mfingerprint = null;
+        String fingerprint = null;
+        System.out.println("in impl"+searchResults);
+        if(searchResults.size() != 0){
+            for(Patient patientSearched : searchResults) {
+                System.out.println("Patient Id : " + patientSearched.getPatientId());
+                mfingerprint = getFingerprintByPatientUUID(patientSearched.getUuid());
+                if (mfingerprint != null) {
+                    fingerprint = mfingerprint.getFingerprint();
+                }
+                patients.add(new PatientFingerPrintModel(patientSearched.getUuid(),
+                                fingerprint,
+                                patientSearched.getId(),
+                                patientSearched.getGivenName(),
+                                patientSearched.getFamilyName(),
+                                patientSearched.getGender())
+                );
+            }
+        }
+        return patients;
     }
 
     @Override
@@ -119,6 +145,35 @@ public class MuzimafingerPrintServiceImpl extends BaseOpenmrsService implements 
         }
         muzimaFingerprintDAO.saveMuzimaFingerprint(muzimaFingerprint);
         return true;
+    }
+
+    @Override
+    public PatientFingerPrintModel addFingerprintToPatient(String patientWithFingerprint) throws JSONException {
+        PatientJsonParser patientJsonParser = new PatientJsonParser();
+        PatientFingerPrintModel patient = null;
+        Patient pat = null;
+        String fingerprint = patientJsonParser.getFingerPrintFromJson(patientWithFingerprint);
+        String patientUUID = patientJsonParser.getPatientUUIDFromJson(patientWithFingerprint);
+        /*MuzimaFingerprint muzimaFingerprint = muzimaFingerprintDAO.findByPatientUUID(patientUUID);
+        if( muzimaFingerprint == null) {
+            muzimaFingerprint = new MuzimaFingerprint();
+            muzimaFingerprint.setPatientUUID(patientUUID);
+            muzimaFingerprint.setFingerprint(fingerprint);
+        } else {
+            muzimaFingerprint.setFingerprint(fingerprint);
+        }*/
+        MuzimaFingerprint muzimaFingerprint = new MuzimaFingerprint();
+        muzimaFingerprint.setPatientUUID(patientUUID);
+        muzimaFingerprint.setFingerprint(fingerprint);
+        System.out.println("In addFingerprintToPatient method: "+(muzimaFingerprintDAO.saveMuzimaFingerprint(muzimaFingerprint)).toString());
+        pat = Context.getPatientService().getPatientByUuid(patientUUID);
+        patient = new PatientFingerPrintModel(pat.getUuid(),
+                fingerprint,
+                pat.getId(),
+                pat.getGivenName(),
+                pat.getFamilyName(),
+                pat.getGender());
+        return patient;
     }
 
     @Override
