@@ -1,6 +1,5 @@
 
 var _FINGERPRINT_DATA = "";
-var PATIENT_UUID = "";
 
 function showMessage() {
     return "This is from javascript";
@@ -41,16 +40,8 @@ function updatePatientListTable(Patients, updateControlsStatus){
     updateControls(updateControlsStatus);
     $("#tblData tbody tr").remove();
     Patients.forEach( function (patient){
-        var selectionColumn = "";
-        /*if(updateControlsStatus == 5){
-         selectionColumn =  "<td><input type='radio' name='selectedPatient' value = '"+patient.patientUUID+"'> "+patient.id+"</td>";
-         }
-         else{
-         selectionColumn =  "<td><a href='"+openmrsContextPath+"/patientDashboard.form?patientId="+patient.id+"'>"+patient.id+" </a></td>";
-         }*/
-        selectionColumn =  "<td><a href='"+openmrsContextPath+"/patientDashboard.form?patientId="+patient.id+"'>"+patient.id+" </a></td>";
         $("#tblData tbody").append( "<tr>"
-            + selectionColumn
+            + "<td><a href='"+openmrsContextPath+"/patientDashboard.form?patientId="+patient.id+"'>"+patient.id+" </a></td>"
             + "<td>"+patient.givenName +"</td>"
             + "<td>"+ patient.familyName+"</td>"
             + "<td>"+ patient.gender+"</td>"
@@ -62,8 +53,6 @@ function updatePatientListTable(Patients, updateControlsStatus){
 function activate(val, e){
     var key=e.keyCode || e.which;
     if (key==13){
-        //alert("hello "+val);
-        //$.post("fingerprint/findPatients.form", val, function(){ });
         $.ajax({
             type: "POST",
             url: "fingerprint/findPatients.form",
@@ -71,9 +60,13 @@ function activate(val, e){
             data: val,
             dataType: 'json',
             success: function (result) {
-                //alert('Yay! It worked!');
                 console.log(result);
-                updatePatientListTable(result, 5);
+                if(result.length == 0) {
+                    updateControls(5);
+                }
+                else{
+                    updatePatientListTable(result, 1);
+                }
             },
             error: function (result) {
                 alert('Oh no :(');
@@ -92,16 +85,11 @@ function show(fingerprint, patientUuid){
 };
 
 function addFPrint(patientUuid){
-    /*$('#addFingerprint'+patientUuid).hide();
-     $('#tester').show();*/
-    PATIENT_UUID = patientUuid;
     window.location = openmrsContextPath+'/module/muzimafingerPrint/newPage.form?patUuid='+patientUuid;
 };
 
 function RegisterPatient(fingerprint){
     updateControls(2);
-    /*var elm_reg = document.getElementById('fingerprint');
-    elm_reg.value = fingerprint;*/
 };
 
 function updateControls(status){
@@ -113,7 +101,7 @@ function updateControls(status){
         $('#otherIdentifiers').hide();
         $('#registrationForm').hide();
         $('#updatePatient').hide();
-
+        $('#searchResults').hide();
     }else if(status ==1){
 
         //Show table - case1 : Patient found for scan process
@@ -122,7 +110,7 @@ function updateControls(status){
         $('#otherIdentifiers').hide();
         $('#registrationForm').hide();
         $('#updatePatient').hide();
-
+        $('#searchResults').hide();
     }else if(status ==2){
 
         //Show other option - case2 : Patient not found
@@ -131,6 +119,7 @@ function updateControls(status){
         $('#otherIdentifiers').hide();
         $('#registrationForm').hide();
         $('#updatePatient').hide();
+        $('#searchResults').hide();
     } else if(status ==3){
 
         //Show other identifiers section - case3 : clicked yes
@@ -139,6 +128,7 @@ function updateControls(status){
         $('#otherIdentifiers').show();
         $('#registrationForm').hide();
         $('#updatePatient').hide();
+        $('#searchResults').hide();
     } else if(status ==4){
 
         //Show registration section - case4 : clicked No
@@ -147,17 +137,18 @@ function updateControls(status){
         $('#otherIdentifiers').hide();
         $('#registrationForm').show();
         $('#updatePatient').hide();
+        $('#searchResults').hide();
     }
     else if(status ==5){
-        //Show table - case1 : Patient found for other identifier
-        $('#body-wrapper').show();
+
+        //Show registration section - case4 : clicked No
+        $('#body-wrapper').hide();
         $('#otherIdentificationOption').hide();
         $('#otherIdentifiers').hide();
         $('#registrationForm').hide();
         $('#updatePatient').hide();
-
+        $('#searchResults').show();
     }
-
 };
 
 var pushIntoArray = function (object, key, value) {
@@ -272,7 +263,7 @@ $(function(){
             async: false,
             success: function(msg) {
                 console.log(msg);
-                updatePatientListTable(msg, 5);
+                updatePatientListTable(msg, 1);
             },
             error: function(msg, status, error){
                 alert(error);
@@ -300,7 +291,6 @@ $(function(){
             success: function(msg) {
                 console.log(msg);
                 window.location = openmrsContextPath+'/module/muzimafingerPrint/findPatient1.form?message='+patientUuid;
-                //updatePatientListTable(message, 5);
             },
             error: function(msg, status, error){
                 alert(error);
@@ -437,18 +427,6 @@ $(function(){
             }
         }
     });
-    /*$("#findPatients").onkeydown( function(event) {
-     var message = $('#findPatients').val();
-     if(event.keyCode==13){
-     $.post("fingerprint/findPatients.form", message, function(){ });
-     }
-     });*/
-    /*var newMessage = $('#mes').val();
-    //alert("newMessage is ----"+newMessage+"----");
-    if(newMessage != null && newMessage !='')
-    {
-        updatePatientListTable(newMessage, 5);
-    }*/
     updateControls(0);
     if($("#findPatients").val() != null && $("#findPatients").val() != "")
     {
@@ -459,9 +437,13 @@ $(function(){
             data: $("#findPatients").val(),
             dataType: 'json',
             success: function (result) {
-                //alert('Yay! It worked!');
                 console.log(result);
-                updatePatientListTable(result, 5);
+                if(result.length == 0) {
+                    updateControls(5);
+                }
+                else{
+                    updatePatientListTable(result, 1);
+                }
             },
             error: function (result) {
                 alert('Oh no :(');

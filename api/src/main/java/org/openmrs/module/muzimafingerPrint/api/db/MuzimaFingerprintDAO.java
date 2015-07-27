@@ -1,4 +1,4 @@
-package org.openmrs.module.muzimafingerPrint.api.db.hibernet;
+package org.openmrs.module.muzimafingerPrint.api.db;
 
 
 import org.openmrs.module.muzimafingerPrint.MuzimaFingerprint;

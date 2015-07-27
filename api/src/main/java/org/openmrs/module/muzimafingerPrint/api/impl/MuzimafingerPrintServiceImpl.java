@@ -17,7 +17,7 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.muzimafingerPrint.MuzimaFingerprint;
 import org.openmrs.module.muzimafingerPrint.PatientJsonParser;
 import org.openmrs.module.muzimafingerPrint.api.MuzimafingerPrintService;
-import org.openmrs.module.muzimafingerPrint.api.db.hibernet.MuzimaFingerprintDAO;
+import org.openmrs.module.muzimafingerPrint.api.db.MuzimaFingerprintDAO;
 import org.openmrs.module.muzimafingerPrint.model.PatientFingerPrintModel;
 import org.openmrs.module.muzimafingerPrint.panels.EnrollFromScanner;
 import org.openmrs.module.muzimafingerPrint.settings.FingersTools;
@@ -39,10 +39,6 @@ public class MuzimafingerPrintServiceImpl extends BaseOpenmrsService implements 
     private MuzimaFingerprintDAO dao;
     private final EnrollCompletionHandler enrollCompletionHandler = new EnrollCompletionHandler();
 
-    /*public MuzimafingerPrintServiceImpl(MuzimaFingerprintDAO fingerprintDAO) {
-        this.muzimaFingerprintDAO = fingerprintDAO;
-    }*/
-
     public void setDao(MuzimaFingerprintDAO dao) {
         this.dao = dao;
     }
@@ -50,10 +46,6 @@ public class MuzimafingerPrintServiceImpl extends BaseOpenmrsService implements 
     public MuzimaFingerprintDAO getDao() {
         return dao;
     }
-
-    /*public MuzimafingerPrintServiceImpl() {
-
-    }*/
 
     @Override
     public PatientFingerPrintModel savePatient(String patientData) throws JSONException, ParseException {
@@ -64,7 +56,6 @@ public class MuzimafingerPrintServiceImpl extends BaseOpenmrsService implements 
         Context.getPatientService().savePatient(patient);
         //Context.getEncounterService().saveEncounter(encounter);
         MuzimaFingerprint muzimaFingerprint = patientJsonParser.CreatePatientFingerPrint(patient, patientData);
-        System.out.println("In save Patient method: " + (dao.saveMuzimaFingerprint(muzimaFingerprint)).toString());
 
         return new PatientFingerPrintModel(patient.getUuid(),muzimaFingerprint.getFingerprint(), patient.getId(), patient.getGivenName(), patient.getFamilyName(), patient.getGender());
     }
@@ -102,7 +93,6 @@ public class MuzimafingerPrintServiceImpl extends BaseOpenmrsService implements 
         List<Patient> searchResults = Context.getPatientService().getPatients(searchInput);
         MuzimaFingerprint mfingerprint = null;
         String fingerprint = null;
-        System.out.println("in impl"+searchResults);
         if(searchResults.size() != 0){
             for(Patient patientSearched : searchResults) {
                 System.out.println("Patient Id : " + patientSearched.getPatientId());
@@ -162,14 +152,6 @@ public class MuzimafingerPrintServiceImpl extends BaseOpenmrsService implements 
         Patient pat = null;
         String fingerprint = patientJsonParser.getFingerPrintFromJson(patientWithFingerprint);
         String patientUUID = patientJsonParser.getPatientUUIDFromJson(patientWithFingerprint);
-        /*MuzimaFingerprint muzimaFingerprint = muzimaFingerprintDAO.findByPatientUUID(patientUUID);
-        if( muzimaFingerprint == null) {
-            muzimaFingerprint = new MuzimaFingerprint();
-            muzimaFingerprint.setPatientUUID(patientUUID);
-            muzimaFingerprint.setFingerprint(fingerprint);
-        } else {
-            muzimaFingerprint.setFingerprint(fingerprint);
-        }*/
         MuzimaFingerprint muzimaFingerprint = new MuzimaFingerprint();
         muzimaFingerprint.setPatientUUID(patientUUID);
         muzimaFingerprint.setFingerprint(fingerprint);

@@ -1,11 +1,11 @@
-package org.openmrs.module.muzimafingerPrint.api.db.hibernet.impl;
+package org.openmrs.module.muzimafingerPrint.api.db.hibernate;
 
 import org.hibernate.CacheMode;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.openmrs.module.muzimafingerPrint.MuzimaFingerprint;
-import org.openmrs.module.muzimafingerPrint.api.db.hibernet.MuzimaFingerprintDAO;
+import org.openmrs.module.muzimafingerPrint.api.db.MuzimaFingerprintDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by vikas on 15/10/14.
  */
-public class MuzimaFingerprintDAOImpl implements MuzimaFingerprintDAO {
+public class HibernateMuzimaFingerprintDAO implements MuzimaFingerprintDAO {
 
     @Autowired
     private SessionFactory sessionFactory;

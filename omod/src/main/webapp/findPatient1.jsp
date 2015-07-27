@@ -82,6 +82,9 @@
             </div>
         </div>
     </div>
+    <div id="searchResults">
+        <h5>No Patient found</h5>
+    </div>
     <div id = "registrationSection">
         <div id = "updatePatient" class = "button-loc">
             <input id = "btnUpdatePatient" type="button" value= "Update Selected patient">
